@@ -16,14 +16,20 @@ Scene
 */
 class Scene {
 public:
-	Scene() { m_bodies.reserve(128); }
+	Scene() { m_bodies.reserve( 128 ); }
 	~Scene();
 
 	void Reset();
 	void Initialize();
-	void Update(const float dt_sec);
+	void Update( const float dt_sec );
+
+	std::string GetName()
+	{
+		return "book01";
+	}
 
 	std::vector< Body > m_bodies;
-	//std::vector< Constraint* >	m_constraints;
+	//std::vector< Constraint * >	m_constraints;
 	//ManifoldCollector m_manifolds;
 };
+

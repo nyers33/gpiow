@@ -8,9 +8,10 @@
 Body::Body
 ====================================================
 */
-Body::Body() : m_position( 0.0f, 0.0f, 0.0f), m_orientation( 1.0f, 0.0f, 0.0f, 0.0f ), m_shape( nullptr ),
-m_invMass(0.0f), m_elasticity(0.0f), m_friction(0.0f)
-{
+Body::Body() :
+m_position( 0.0f, 0.0f, 0.0f ),
+m_orientation( 1.0f, 0.0f, 0.0f, 0.0f ),
+m_shape( NULL ) {
 	m_linearVelocity.Zero();
 	m_angularVelocity.Zero();
 }
@@ -44,7 +45,7 @@ Body::WorldSpaceToBodySpace
 Vec3 Body::WorldSpaceToBodySpace( const Vec3 & worldPt ) const {
 	Vec3 tmp			= worldPt - GetCenterOfMassWorldSpace();
 	Quat inverseOrient	= m_orientation.Inverse();
-	Vec3 bodySpace		= QuatRotatePoint(inverseOrient, tmp );
+	Vec3 bodySpace		= QuatRotatePoint( inverseOrient, tmp );
 	return bodySpace;
 }
 
@@ -54,7 +55,7 @@ Body::BodySpaceToWorldSpace
 ====================================================
 */
 Vec3 Body::BodySpaceToWorldSpace( const Vec3 & worldPt ) const {
-	Vec3 worldSpace = GetCenterOfMassWorldSpace() + QuatRotatePoint(m_orientation, worldPt );
+	Vec3 worldSpace = GetCenterOfMassWorldSpace() + QuatRotatePoint( m_orientation, worldPt );
 	return worldSpace;
 }
 
@@ -65,7 +66,7 @@ Body::GetInverseInertiaTensorBodySpace
 */
 Mat3 Body::GetInverseInertiaTensorBodySpace() const {
 	Mat3 inertiaTensor		= m_shape->InertiaTensor();
-	Mat3 invInertiaTensor = inertiaTensor.Inverse() * m_invMass;
+	Mat3 invInertiaTensor	= inertiaTensor.Inverse() * m_invMass;
 	return invInertiaTensor;
 }
 
@@ -77,7 +78,7 @@ Body::GetInverseInertiaTensorWorldSpace
 Mat3 Body::GetInverseInertiaTensorWorldSpace() const {
 	Mat3 inertiaTensor		= m_shape->InertiaTensor();
 	Mat3 invInertiaTensor	= inertiaTensor.Inverse() * m_invMass;
-	Mat3 orient					= QuatToMat3(m_orientation);
+	Mat3 orient				= QuatToMat3(m_orientation);
 	invInertiaTensor		= orient * invInertiaTensor * orient.Transpose();
 	return invInertiaTensor;
 }
@@ -98,8 +99,7 @@ void Body::ApplyImpulse( const Vec3 & impulsePoint, const Vec3 & impulse ) {
 
 	Vec3 position = GetCenterOfMassWorldSpace();	// applying impulses must produce torques through the center of mass
 	Vec3 r = impulsePoint - position;
-	Vec3 dL = r.Cross(impulse);	// this is in world space
-
+	Vec3 dL = r.Cross( impulse );	// this is in world space
 	ApplyImpulseAngular( dL );
 }
 
@@ -135,7 +135,7 @@ void Body::ApplyImpulseAngular( const Vec3 & impulse ) {
 	m_angularVelocity += GetInverseInertiaTensorWorldSpace() * impulse;
 
 	const float maxAngularSpeed = 30.0f; // 30 rad/s is fast enough for us. But feel free to adjust.
-	if (m_angularVelocity.GetLengthSqr() > maxAngularSpeed * maxAngularSpeed) {
+	if ( m_angularVelocity.GetLengthSqr() > maxAngularSpeed * maxAngularSpeed ) {
 		m_angularVelocity.Normalize();
 		m_angularVelocity *= maxAngularSpeed;
 	}
@@ -172,5 +172,5 @@ void Body::Update( const float dt_sec ) {
 	m_orientation.Normalize();
 
 	// Now get the new model position
-	m_position = positionCM + QuatRotatePoint(dq, cmToPos );
+	m_position = positionCM + QuatRotatePoint( dq, cmToPos );
 }

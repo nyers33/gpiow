@@ -31,7 +31,6 @@ SortBodiesBounds
 */
 void SortBodiesBounds( const Body * bodies, const int num, psuedoBody_t * sortedArray, const float dt_sec ) {
 	Vec3 axis = Vec3( 1, 1, 1 );
-
 	axis.Normalize();
 
 	for ( int i = 0; i < num; i++ ) {
@@ -39,20 +38,20 @@ void SortBodiesBounds( const Body * bodies, const int num, psuedoBody_t * sorted
 		Bounds bounds = body.m_shape->GetBounds( body.m_position, body.m_orientation );
 
 		// Expand the bounds by the linear velocity
-		bounds.Expand(bounds.mins + body.m_linearVelocity * dt_sec);
-		bounds.Expand(bounds.maxs + body.m_linearVelocity * dt_sec);
+		bounds.Expand( bounds.mins + body.m_linearVelocity * dt_sec );
+		bounds.Expand( bounds.maxs + body.m_linearVelocity * dt_sec );
 
 		const float epsilon = 0.01f;
-		bounds.Expand(bounds.mins + Vec3(-1, -1, -1) * epsilon);
-		bounds.Expand(bounds.maxs + Vec3(1, 1, 1) * epsilon);
+		bounds.Expand( bounds.mins + Vec3(-1,-1,-1 ) * epsilon );
+		bounds.Expand( bounds.maxs + Vec3( 1, 1, 1 ) * epsilon );
 
-		sortedArray[i * 2 + 0].id = i;
-		sortedArray[i * 2 + 0].value = axis.Dot(bounds.mins);
-		sortedArray[i * 2 + 0].ismin = true;
+		sortedArray[ i * 2 + 0 ].id = i;
+		sortedArray[ i * 2 + 0 ].value = axis.Dot( bounds.mins );
+		sortedArray[ i * 2 + 0 ].ismin = true;
 
-		sortedArray[i * 2 + 1].id = i;
-		sortedArray[i * 2 + 1].value = axis.Dot(bounds.maxs);
-		sortedArray[i * 2 + 1].ismin = false;
+		sortedArray[ i * 2 + 1 ].id = i;
+		sortedArray[ i * 2 + 1 ].value = axis.Dot( bounds.maxs );
+		sortedArray[ i * 2 + 1 ].ismin = false;
 	}
 
 	qsort( sortedArray, num * 2, sizeof( psuedoBody_t ), CompareSAP );

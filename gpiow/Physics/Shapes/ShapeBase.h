@@ -2,9 +2,11 @@
 //	ShapeBase.h
 //
 #pragma once
-
-#include "gpiow.h"
-
+//#include "../../Math/Vector.h"
+//#include "../../Math/Quat.h"
+//#include "../../Math/Matrix.h"
+//#include "../../Math/Bounds.h"
+#include "gpiow_eigen.h"
 #include <vector>
 
 /*

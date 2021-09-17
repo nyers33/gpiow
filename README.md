@@ -1,11 +1,11 @@
 # Game Physics in One Weekend
 
-<p align="center"><img src="gpiow_book00.png" width="600" /></p>
-
 ## Changes
+* Book00 & Book01
 * CMake project & build support
 * default math interface replaced with Eigen
 * removed rendering backend
+* ply output for debug viz
 * more to come ...
 
 ## References
