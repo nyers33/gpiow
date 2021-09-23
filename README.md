@@ -8,5 +8,8 @@
 * ply output for debug viz
 * more to come ...
 
+https://github.com/nyers33/gpiow/blob/main/media/gpiow_book00.mp4
+https://github.com/nyers33/gpiow/blob/main/media/gpiow_book01.mp4
+
 ## References
  * [Game Physics in One Weekend by Gregory Hodges](https://gamephysicsweekend.github.io/)

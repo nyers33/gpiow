@@ -5,6 +5,8 @@
 #include "Physics/Contact.h"
 #include "Physics/Intersections.h"
 #include "Physics/Broadphase.h"
+#include <cmath>
+#include <random>
 
 /*
 ========================================================================================================
@@ -107,26 +109,93 @@ Scene::Initialize
 void Scene::Initialize() {
 	Body body;
 
-	body.m_position = Vec3(10, 0, 3);
-	body.m_orientation = QuatCreate(0, 0, 0, 1);
-	body.m_linearVelocity = Vec3(-100, 0, 0);
-	body.m_angularVelocity = Vec3(0.0f, 0.0f, 0.0f);
-	body.m_invMass = 1.0f;
-	body.m_elasticity = 0.5f;
-	body.m_friction = 0.5f;
-	body.m_shape = new ShapeSphere(0.5f);
-	m_bodies.push_back(body);
+	if (0)
+	{
+		body.m_position = Vec3(10, 0, 3);
+		body.m_orientation = QuatCreate(0, 0, 0, 1);
+		body.m_linearVelocity = Vec3(-100, 0, 0);
+		body.m_angularVelocity = Vec3(0.0f, 0.0f, 0.0f);
+		body.m_invMass = 1.0f;
+		body.m_elasticity = 0.5f;
+		body.m_friction = 0.5f;
+		body.m_shape = new ShapeSphere(0.5f);
+		m_bodies.push_back(body);
 
-	body.m_position = Vec3(-10, 0, 3);
-	body.m_orientation = QuatCreate(0, 0, 0, 1);
-	body.m_linearVelocity = Vec3(100, 0, 0);
-	body.m_angularVelocity = Vec3(0, 10, 0);
-	body.m_invMass = 1.0f;
-	body.m_elasticity = 0.5f;
-	body.m_friction = 0.5f;
-	body.m_shape = new ShapeConvex(g_diamond, sizeof(g_diamond) / sizeof(Vec3));
-	m_bodies.push_back(body);
+		body.m_position = Vec3(-10, 0, 3);
+		body.m_orientation = QuatCreate(0, 0, 0, 1);
+		body.m_linearVelocity = Vec3(100, 0, 0);
+		body.m_angularVelocity = Vec3(0, 10, 0);
+		body.m_invMass = 1.0f;
+		body.m_elasticity = 0.5f;
+		body.m_friction = 0.5f;
+		body.m_shape = new ShapeConvex(g_diamond, sizeof(g_diamond) / sizeof(Vec3));
+		m_bodies.push_back(body);
+	}
+	else
+	{
+		body.m_linearVelocity = Vec3(0, 0, 0);
+		body.m_angularVelocity = Vec3(0, 0, 0);
+		body.m_invMass = 1.0f;
+		body.m_elasticity = 0.5f;
+		body.m_friction = 0.5f;
 
+		std::random_device rnd;
+		std::default_random_engine rnd_engine(rnd());
+		std::uniform_real_distribution<float> distr(0., 1.);
+
+		int nRows = 6;
+		int nOuterRad = 8;
+		int nInnerRad = 6;
+		float hRow = 2.0f;
+
+		for (int j = 0; j < nRows; ++j)
+		{
+			for (int i = 0; i < 8; ++i)
+			{
+				float coneAngle = 0.25f * (float)(M_PI);
+				float z = distr(rnd_engine) * (1.0f - cos(coneAngle)) + cos(coneAngle);
+				float phi = distr(rnd_engine) * 2.0f * (float)(M_PI);
+				float x = sqrt(1.0f - z * z) * cos(phi);
+				float y = sqrt(1.0f - z * z) * sin(phi);
+				Vec3 randomConeDir(x, y, z);
+
+				body.m_position = Vec3(
+					4.0f * cosf((float)(M_PI) * i / ((float)(nOuterRad) / 2.0f) + 0.5f * (j % 2) * (float)(M_PI) / ((float)(nOuterRad) / 2.0f)),
+					4.0f * sinf((float)(M_PI) * i / ((float)(nOuterRad) / 2.0f) + 0.5f * (j % 2) * (float)(M_PI) / ((float)(nOuterRad) / 2.0f)),
+					6.0f + j * hRow
+				);
+
+				body.m_orientation = Quat(Eigen::AngleAxisf((0.5f * distr(rnd_engine) - 0.25f) * (float)(M_PI), randomConeDir));
+
+				body.m_shape = new ShapeConvex(g_diamond, sizeof(g_diamond) / sizeof(Vec3));
+				m_bodies.push_back(body);
+			}
+		}
+
+		for (int j = 0; j < nRows; ++j)
+		{
+			for (int i = 0; i < 6; ++i)
+			{
+				float coneAngle = 0.25f * (float)(M_PI);
+				float z = distr(rnd_engine) * (1.0f - cos(coneAngle)) + cos(coneAngle);
+				float phi = distr(rnd_engine) * 2.0f * (float)(M_PI);
+				float x = sqrt(1.0f - z * z) * cos(phi);
+				float y = sqrt(1.0f - z * z) * sin(phi);
+				Vec3 randomConeDir(x,y,z);
+
+				body.m_position = Vec3(
+					2.0f * cosf((float)(M_PI) * i / ((float)(nInnerRad) / 2.0f) + 0.5f * (j % 2) * (float)(M_PI) / ((float)(nInnerRad) / 2.0f)),
+					2.0f * sinf((float)(M_PI) * i / ((float)(nInnerRad) / 2.0f) + 0.5f * (j % 2) * (float)(M_PI) / ((float)(nInnerRad) / 2.0f)),
+					6.0f + j * hRow
+				);
+
+				body.m_orientation = Quat(Eigen::AngleAxisf((0.5f * distr(rnd_engine) - 0.25f) * (float)(M_PI), randomConeDir));
+
+				body.m_shape = new ShapeConvex(g_diamond, sizeof(g_diamond) / sizeof(Vec3));
+				m_bodies.push_back(body);
+			}
+		}
+	}
 	AddStandardSandBox(m_bodies);
 }
 

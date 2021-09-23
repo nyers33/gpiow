@@ -413,7 +413,7 @@ void SavePLY(const std::string& fileName, const std::vector< Vec4 >& all_points,
 int main( int argc, char * argv[] )
 {
 	int iterCurr = 0;
-	const int iterMax = 2*1024;
+	const int iterMax = 512*3;
 
 	std::vector< Vec4 > all_points;
 	std::vector< unsigned int > all_indices;

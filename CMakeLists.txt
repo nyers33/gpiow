@@ -57,8 +57,8 @@ target_include_directories(gpiow_book01 PUBLIC ${CMAKE_CURRENT_LIST_DIR}/gpiow/S
 target_include_directories(gpiow_book01 PUBLIC ${CMAKE_CURRENT_LIST_DIR}/gpiow/Physics)
 
 IF(WIN32)
-	target_compile_definitions(gpiow_book00 INTERFACE NOMINMAX _USE_MATH_DEFINES)
-	target_compile_definitions(gpiow_book01 INTERFACE NOMINMAX _USE_MATH_DEFINES)
+	target_compile_definitions(gpiow_book00 PRIVATE NOMINMAX _USE_MATH_DEFINES)
+	target_compile_definitions(gpiow_book01 PRIVATE NOMINMAX _USE_MATH_DEFINES)
 ENDIF(WIN32)
 
 source_group("" FILES main.cpp gpiow_eigen.h)
