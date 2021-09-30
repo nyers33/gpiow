@@ -6,7 +6,8 @@
 * default math interface replaced with Eigen
 * removed rendering backend
 * ply output for debug viz
-* more to come ...
+* WIP libccd / openGJK integration
 
 ## References
  * [Game Physics in One Weekend by Gregory Hodges](https://gamephysicsweekend.github.io/)
+ * [CMake Git Clone](https://github.com/tschuchortdev/cmake_git_clone)
